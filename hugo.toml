@@ -1,3 +1,4 @@
+enableRobotsTXT = true
 baseURL = 'https://aurae-venuis.auraevalois.workers.dev/'
 locale = 'en-us'
 title = "Aurae Venuis"
@@ -11,7 +12,6 @@ theme = "ananke"
     [markup.goldmark.renderer]
       unsafe = true
 
-enableRobotsTXT = true
 
 [outputs]
   home = ["HTML", "JSON"]
