@@ -1,0 +1,23 @@
+{{ $item := .item }}
+{{ $level := .level | default 0 }}
+<li class="menu-node level-{{ $level }} {{ if $item.Children }}has-children{{ end }}">
+  <div class="menu-node-row">
+    <a href="{{ $item.URL }}">{{ $item.Name }}</a>
+    {{ if $item.Children }}
+    <button class="menu-expand-btn" type="button" aria-label="Expand {{ $item.Name }}"></button>
+    {{ end }}
+  </div>
+
+  {{ if $item.Children }}
+  <ul class="menu-node-children accordion-list">
+    <li class="menu-node level-{{ add $level 1 }}">
+      <div class="menu-node-row">
+        <a href="{{ $item.URL }}" class="view-all-link">View all</a>
+      </div>
+    </li>
+    {{ range $item.Children }}
+      {{ partial "menu-item.html" (dict "item" . "level" (add $level 1)) }}
+    {{ end }}
+  </ul>
+  {{ end }}
+</li>

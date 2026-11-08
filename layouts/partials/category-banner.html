@@ -1,0 +1,155 @@
+{{ $menu := .Site.Menus.main }}
+{{ $navCount := len $menu }}
+
+{{ if ge $navCount 2 }}
+
+  {{/* ============================================================
+       2 OR MORE NAV ITEMS — first two become the split banner
+  ============================================================ */}}
+
+  {{ $item1 := index $menu 0 }}
+  {{ $slug1 := path.Base $item1.URL }}
+  {{ $termPage1 := $.Site.GetPage $item1.URL }}
+  {{ $image1 := "" }}
+  {{ with $termPage1 }}
+    {{ $image1 = .Params.image }}
+  {{ end }}
+  {{ if not $image1 }}
+    {{ $image1 = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600&q=80" }}
+  {{ end }}
+  {{ $pages1 := where $.Site.RegularPages "Params.categories" "intersect" (slice $slug1) }}
+  {{ $latest1 := $pages1.ByDate.Reverse | first 3 }}
+
+  {{ $item2 := index $menu 1 }}
+  {{ $slug2 := path.Base $item2.URL }}
+  {{ $termPage2 := $.Site.GetPage $item2.URL }}
+  {{ $image2 := "" }}
+  {{ with $termPage2 }}
+    {{ $image2 = .Params.image }}
+  {{ end }}
+  {{ if not $image2 }}
+    {{ $image2 = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600&q=80" }}
+  {{ end }}
+  {{ $pages2 := where $.Site.RegularPages "Params.categories" "intersect" (slice $slug2) }}
+  {{ $latest2 := $pages2.ByDate.Reverse | first 3 }}
+
+  <section class="home-banner-split">
+    <div class="home-banner-split-half" data-hover-tab="tab-0" style="background-image:url('{{ $image1 }}');">
+      <div class="home-banner-content">
+        <h2>{{ $item1.Name }}</h2>
+        <a href="{{ $item1.URL }}" class="home-banner-btn">Explore Category</a>
+      </div>
+    </div>
+    <div class="home-banner-split-half" data-hover-tab="tab-1" style="background-image:url('{{ $image2 }}');">
+      <div class="home-banner-content">
+        <h2>{{ $item2.Name }}</h2>
+        <a href="{{ $item2.URL }}" class="home-banner-btn">Explore Category</a>
+      </div>
+    </div>
+  </section>
+
+  {{/* ===== Shared switcher-bar for the two categories' latest-3-articles ===== */}}
+  <div class="banner-switcher" data-default="tab-0">
+    <div class="banner-switcher-tabs">
+      <button type="button" class="banner-switcher-tab is-active" data-tab="tab-0">{{ $item1.Name }}</button>
+      <button type="button" class="banner-switcher-tab" data-tab="tab-1">{{ $item2.Name }}</button>
+    </div>
+
+    <div class="banner-switcher-panel is-active" data-panel="tab-0">
+      {{ range $latest1 }}
+        <a href="{{ .Permalink }}" class="banner-article-card">
+          {{ with .Params.image }}
+            <div class="banner-article-img" style="background-image:url('{{ . }}')"></div>
+          {{ else }}
+            <div class="banner-article-img placeholder"></div>
+          {{ end }}
+          <div class="banner-article-body">
+            <h3>{{ .Title }}</h3>
+            <p>{{ .Summary | truncate 90 }}</p>
+          </div>
+        </a>
+      {{ end }}
+      {{ if not $latest1 }}
+        <p class="banner-articles-empty">New articles coming soon for {{ $item1.Name }}.</p>
+      {{ end }}
+    </div>
+
+    <div class="banner-switcher-panel" data-panel="tab-1">
+      {{ range $latest2 }}
+        <a href="{{ .Permalink }}" class="banner-article-card">
+          {{ with .Params.image }}
+            <div class="banner-article-img" style="background-image:url('{{ . }}')"></div>
+          {{ else }}
+            <div class="banner-article-img placeholder"></div>
+          {{ end }}
+          <div class="banner-article-body">
+            <h3>{{ .Title }}</h3>
+            <p>{{ .Summary | truncate 90 }}</p>
+          </div>
+        </a>
+      {{ end }}
+      {{ if not $latest2 }}
+        <p class="banner-articles-empty">New articles coming soon for {{ $item2.Name }}.</p>
+      {{ end }}
+    </div>
+  </div>
+
+  {{/* ===== Minimal JS — ONLY powers this switcher.
+         - Hovering the BANNER IMAGE HALVES = temporary preview.
+         - Leaving the image = reverts to the locked/default tab.
+         - Clicking a TAB BUTTON = permanent lock until manually
+           switched again or the page is refreshed.
+         Nothing else on the site is touched by this script. ===== */}}
+  
+{{ else }}
+
+  {{/* ============================================================
+       ONLY 1 NAV ITEM — single full-width Luxora-style hero banner
+  ============================================================ */}}
+
+  {{ $item := index $menu 0 }}
+  {{ $slug := path.Base $item.URL }}
+  {{ $termPage := $.Site.GetPage $item.URL }}
+  {{ $image := "" }}
+  {{ $intro := "" }}
+  {{ with $termPage }}
+    {{ $image = .Params.image }}
+    {{ $intro = .Description }}
+  {{ end }}
+  {{ if not $image }}
+    {{ $image = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600&q=80" }}
+  {{ end }}
+  {{ $pages := where $.Site.RegularPages "Params.categories" "intersect" (slice $slug) }}
+  {{ $latest := $pages.ByDate.Reverse | first 3 }}
+
+  <section class="home-banner">
+    <div class="home-banner-media" style="background-image:url('{{ $image }}');">
+      <div class="home-banner-content">
+        <span class="home-banner-eyebrow">Featured Category</span>
+        <h2>{{ $item.Name }}</h2>
+        {{ with $intro }}<p>{{ . }}</p>{{ end }}
+        <a href="{{ $item.URL }}" class="home-banner-btn">Explore {{ $item.Name }}</a>
+      </div>
+    </div>
+
+    <div class="home-banner-articles">
+      {{ range $latest }}
+        <a href="{{ .Permalink }}" class="banner-article-card">
+          {{ with .Params.image }}
+            <div class="banner-article-img" style="background-image:url('{{ . }}')"></div>
+          {{ else }}
+            <div class="banner-article-img placeholder"></div>
+          {{ end }}
+          <div class="banner-article-body">
+            <h3>{{ .Title }}</h3>
+            <p>{{ .Summary | truncate 90 }}</p>
+          </div>
+        </a>
+      {{ end }}
+      {{ if not $latest }}
+        <p class="banner-articles-empty">New articles coming soon for {{ $item.Name }}.</p>
+      {{ end }}
+    </div>
+  </section>
+
+{{ end }}

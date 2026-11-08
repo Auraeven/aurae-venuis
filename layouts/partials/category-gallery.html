@@ -1,0 +1,67 @@
+{{ $menu := .Site.Menus.main }}
+{{ $navCount := len $menu }}
+
+{{ if ge $navCount 3 }}
+
+  {{ $item3 := index $menu 2 }}
+  {{ $slug3 := path.Base $item3.URL }}
+  {{ $termPage3 := $.Site.GetPage $item3.URL }}
+  {{ $image3 := "" }}
+  {{ with $termPage3 }}{{ $image3 = .Params.image }}{{ end }}
+  {{ if not $image3 }}{{ $image3 = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80" }}{{ end }}
+  {{ $pages3 := where $.Site.RegularPages "Params.categories" "intersect" (slice $slug3) }}
+  {{ $latest3 := $pages3.ByDate.Reverse | first 3 }}
+
+  {{/* ============================================================
+       3rd NAV — permanent fixed design.
+       Desktop: image left (with category name + Explore Category
+       button overlay) + "The Latest" article list right.
+       Mobile: image on top, small caption (category + latest
+       article title) under image, then "The Latest" list below.
+       This shape stays the same regardless of future 4th/5th nav.
+  ============================================================ */}}
+
+  <div class="cat-wrap">
+    <div class="cat-feature">
+      <a href="{{ $item3.URL }}" class="cat-feature-image" style="background-image:url('{{ $image3 }}');" aria-label="Explore {{ $item3.Name }}">
+        <div class="cat-feature-image-overlay">
+          <h3 class="cat-feature-image-title">{{ $item3.Name }}</h3>
+          <span class="cat-feature-image-btn">Explore Category</span>
+        </div>
+      </a>
+
+      {{ if $latest3 }}
+      <div class="cat-feature-caption">
+        <span class="cat-feature-eyebrow">{{ $item3.Name }}</span>
+        <a href="{{ (index $latest3 0).Permalink }}" class="cat-feature-caption-title">{{ (index $latest3 0).Title }}</a>
+      </div>
+      {{ end }}
+
+      <div class="cat-feature-side">
+        <h2 class="cat-feature-heading">The Latest</h2>
+
+        <div class="cat-feature-list">
+          {{ range $latest3 }}
+            <a href="{{ .Permalink }}" class="cat-feature-row">
+              <div class="cat-feature-row-text">
+                <span class="cat-feature-eyebrow">{{ $item3.Name }}</span>
+                <h3>{{ .Title }}</h3>
+                <p>{{ .Summary | truncate 70 }}</p>
+              </div>
+              {{ with .Params.image }}
+                <div class="cat-feature-row-img" style="background-image:url('{{ . }}')"></div>
+              {{ else }}
+                <div class="cat-feature-row-img placeholder"></div>
+              {{ end }}
+            </a>
+          {{ end }}
+        </div>
+
+        {{ if not $latest3 }}
+          <p class="cat-articles-empty">New articles coming soon for {{ $item3.Name }}.</p>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+
+{{ end }}

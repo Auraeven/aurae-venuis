@@ -1,4 +1,171 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://aurae-venuis.auraevalois.workers.dev/'
 locale = 'en-us'
-title = 'My New Hugo Project'
+title = "Aurae Venuis"
 theme = "ananke"
+
+[params]
+  mediaURL = "https://pub-2ab352032a3c4c7a94f52afdb7a7b73a.r2.dev"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+enableRobotsTXT = true
+
+[outputs]
+  home = ["HTML", "JSON"]
+
+# ================= MAIN NAV MENU (NESTED) =================
+
+# ---- LIVING ROOM ----
+[[menu.main]]
+  name = "Living Room"
+  identifier = "living-room"
+  url = "/categories/living-room/"
+  weight = 1
+
+[[menu.main]]
+  name = "Sofas & Sectionals"
+  identifier = "sofas"
+  parent = "living-room"
+  url = "/categories/living-room/sofas/"
+  weight = 1
+
+[[menu.main]]
+  name = "2-Seater Sofas"
+  parent = "sofas"
+  url = "/categories/living-room/sofas/2-seater/"
+  weight = 1
+
+[[menu.main]]
+  name = "3-Seater Sofas"
+  parent = "sofas"
+  url = "/categories/living-room/sofas/3-seater/"
+  weight = 2
+
+[[menu.main]]
+  name = "L-Shaped Sectionals"
+  parent = "sofas"
+  url = "/categories/living-room/sofas/l-shaped/"
+  weight = 3
+
+[[menu.main]]
+  name = "Recliners"
+  parent = "sofas"
+  url = "/categories/living-room/sofas/recliners/"
+  weight = 4
+
+[[menu.main]]
+  name = "Coffee Tables"
+  identifier = "coffee-tables"
+  parent = "living-room"
+  url = "/categories/living-room/coffee-tables/"
+  weight = 2
+
+[[menu.main]]
+  name = "TV Units"
+  parent = "living-room"
+  url = "/categories/living-room/tv-units/"
+  weight = 3
+
+[[menu.main]]
+  name = "Rugs & Carpets"
+  parent = "living-room"
+  url = "/categories/living-room/rugs-carpets/"
+  weight = 4
+
+# ---- BEDROOM ----
+[[menu.main]]
+  name = "Bedroom"
+  identifier = "bedroom"
+  url = "/categories/bedroom/"
+  weight = 2
+
+[[menu.main]]
+  name = "Bed Frames"
+  identifier = "bed-frames"
+  parent = "bedroom"
+  url = "/categories/bedroom/bed-frames/"
+  weight = 1
+
+[[menu.main]]
+  name = "Wooden Bed Frames"
+  parent = "bed-frames"
+  url = "/categories/bedroom/bed-frames/wooden/"
+  weight = 1
+
+[[menu.main]]
+  name = "Upholstered Beds"
+  parent = "bed-frames"
+  url = "/categories/bedroom/bed-frames/upholstered/"
+  weight = 2
+
+[[menu.main]]
+  name = "Wardrobes"
+  parent = "bedroom"
+  url = "/categories/bedroom/wardrobes/"
+  weight = 2
+
+[[menu.main]]
+  name = "Bedding & Linen"
+  parent = "bedroom"
+  url = "/categories/bedroom/bedding-linen/"
+  weight = 3
+
+[[menu.main]]
+  name = "Nightstands"
+  parent = "bedroom"
+  url = "/categories/bedroom/nightstands/"
+  weight = 4
+
+# ---- KITCHEN ----
+[[menu.main]]
+  name = "Kitchen"
+  identifier = "kitchen"
+  url = "/categories/kitchen/"
+  weight = 3
+
+[[menu.main]]
+  name = "Dining Tables"
+  parent = "kitchen"
+  url = "/categories/kitchen/dining-tables/"
+  weight = 1
+
+[[menu.main]]
+  name = "Kitchen Storage"
+  parent = "kitchen"
+  url = "/categories/kitchen/storage/"
+  weight = 2
+
+[[menu.main]]
+  name = "Cookware"
+  parent = "kitchen"
+  url = "/categories/kitchen/cookware/"
+  weight = 3
+
+# ---- DIY ----
+[[menu.main]]
+  name = "DIY"
+  identifier = "diy"
+  url = "/categories/diy/"
+  weight = 4
+
+[[menu.main]]
+  name = "Wall Art Projects"
+  parent = "diy"
+  url = "/categories/diy/wall-art/"
+  weight = 1
+
+[[menu.main]]
+  name = "Upcycling Ideas"
+  parent = "diy"
+  url = "/categories/diy/upcycling/"
+  weight = 2
+
+# ---- POP ----
+[[menu.main]]
+  name = "POP"
+  identifier = "pop"
+  url = "/categories/pop/"
+  weight = 5

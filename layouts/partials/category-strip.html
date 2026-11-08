@@ -1,0 +1,54 @@
+{{ $root := .root }}
+{{ $idx := .idx }}
+{{ $menu := $root.Site.Menus.main }}
+{{ $navCount := len $menu }}
+
+{{ if ge $navCount (add $idx 1) }}
+
+  {{ $item := index $menu $idx }}
+  {{ $slug := path.Base $item.URL }}
+  {{ $pages := where $root.Site.RegularPages "Params.categories" "intersect" (slice $slug) }}
+  {{ $latest := $pages.ByDate.Reverse | first 4 }}
+
+  {{/* idx 4 = 5th nav gets the alt mobile "list" layout for variety.
+       idx 3 = 4th nav keeps the default stacked card layout. */}}
+  {{ $modifier := "" }}
+  {{ if eq $idx 4 }}{{ $modifier = " cat-strip-wrap--list" }}{{ end }}
+
+  {{/* ============================================================
+       SIMPLE CATEGORY STRIP — used for 4th, 5th (and any future)
+       nav items. Always the same base shape: category name + arrow
+       on top, 4 latest articles below. No gallery, no split.
+       This shape is now permanent/final — confirmed.
+  ============================================================ */}}
+
+  <div class="cat-strip-wrap{{ $modifier }}">
+    <div class="cat-strip-header">
+      <a href="{{ $item.URL }}" class="cat-strip-title-link">
+        <h2 class="cat-strip-title">{{ $item.Name }} <span class="cat-strip-arrow">&rarr;</span></h2>
+      </a>
+    </div>
+
+    <div class="cat-strip-grid">
+      {{ range $latest }}
+        <a href="{{ .Permalink }}" class="cat-strip-card">
+          {{ with .Params.image }}
+            <div class="cat-strip-card-img" style="background-image:url('{{ . }}')"></div>
+          {{ else }}
+            <div class="cat-strip-card-img placeholder"></div>
+          {{ end }}
+          <div class="cat-strip-card-text">
+            <span class="cat-strip-eyebrow">{{ $item.Name }}</span>
+            <h3 class="cat-strip-card-title">{{ .Title }}</h3>
+            <p class="cat-strip-card-desc">{{ .Summary | truncate 70 }}</p>
+          </div>
+        </a>
+      {{ end }}
+    </div>
+
+    {{ if not $latest }}
+      <p class="cat-articles-empty">New articles coming soon for {{ $item.Name }}.</p>
+    {{ end }}
+  </div>
+
+{{ end }}

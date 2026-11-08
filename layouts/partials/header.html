@@ -1,0 +1,160 @@
+<header class="site-header" id="siteHeader">
+  <div class="nav-container">
+
+    <!-- LEFT WRAPPER: LOGO + NAV MENU TOGETHER -->
+    <div class="nav-left-wrapper">
+      <div class="nav-left">
+        <div class="nav-logo-group">
+          <a href="{{ "/" | relURL }}" class="nav-logo">{{ .Site.Title }}</a>
+          <span class="nav-tagline">Home Decor</span>
+        </div>
+      </div>
+
+      <nav class="nav-center">
+        <ul class="nav-menu">
+          {{ range .Site.Menus.main }}
+          <li class="nav-item {{ if .Children }}has-mega{{ end }}">
+            <a href="{{ .URL }}" class="nav-top-link">
+              {{ .Name }}
+            </a>
+
+            {{ if .Children }}
+            <div class="mega-menu">
+              <button class="mega-close" type="button" aria-label="Close menu">&times;</button>
+              <div class="mega-menu-inner">
+                <ul class="mega-sidebar accordion-list">
+                  {{ range .Children }}
+                    {{ partial "menu-item.html" (dict "item" . "level" 0) }}
+                  {{ end }}
+                </ul>
+                <div class="mega-visual">
+                  <a href="{{ .URL }}" class="mega-visual-card" style="background-image:url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80');">
+                    <span>Discover {{ .Name }}</span>
+                  </a>
+                  <a href="{{ .URL }}" class="mega-visual-card" style="background-image:url('https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80');">
+                    <span>New Collection</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </li>
+          {{ end }}
+        </ul>
+      </nav>
+    </div>
+
+    <!-- RIGHT SECTION: ICONS -->
+    <div class="nav-right">
+      <button class="nav-icon-btn" id="searchToggle" aria-label="Search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+
+      <button class="nav-icon-btn" id="newsletterToggle" aria-label="Newsletter">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M2 6l10 7 10-7"/>
+        </svg>
+      </button>
+
+      <button class="nav-icon-btn" id="savedToggle" aria-label="Saved">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+        </svg>
+      </button>
+
+      <button class="nav-icon-btn nav-hamburger" id="mobileMenuToggle" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <ul class="mobile-nav-list accordion-list">
+      {{ range .Site.Menus.main }}
+      <li class="menu-node level-0 {{ if .Children }}has-children{{ end }}">
+        <div class="menu-node-row">
+          <a href="{{ .URL }}">{{ .Name }}</a>
+          {{ if .Children }}
+          <button class="menu-expand-btn" type="button" aria-label="Expand {{ .Name }}"></button>
+          {{ end }}
+        </div>
+
+        {{ if .Children }}
+        <ul class="menu-node-children accordion-list">
+          <li class="menu-node level-1">
+            <div class="menu-node-row">
+              <a href="{{ .URL }}" class="view-all-link">View all</a>
+            </div>
+          </li>
+          {{ range .Children }}
+            {{ partial "menu-item.html" (dict "item" . "level" 1) }}
+          {{ end }}
+
+          <!-- Mobile-only image, sirf top-level category ke andar, list ke end mein -->
+          <li class="menu-node-image-wrap">
+            <a href="{{ .URL }}" class="menu-node-image" style="background-image:url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80');">
+              <span>Discover {{ .Name }}</span>
+            </a>
+          </li>
+        </ul>
+        {{ end }}
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</header>
+
+<!-- Search Overlay -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search articles..." autocomplete="off">
+    <button class="search-close" id="searchClose">&times;</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- Saved Overlay -->
+<div class="saved-overlay" id="savedOverlay">
+  <div class="saved-box">
+    <div class="saved-header">
+      <h2>Saved Articles</h2>
+      <button class="saved-close" id="savedClose">&times;</button>
+    </div>
+    <div class="saved-list" id="savedList">
+      <p class="saved-empty">No saved articles yet.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Newsletter Modal -->
+<div class="newsletter-overlay" id="newsletterOverlay">
+  <div class="newsletter-modal">
+    <button class="newsletter-close" id="newsletterClose">&times;</button>
+    <span class="newsletter-eyebrow">The Journal</span>
+    <h2>Join the Newsletter</h2>
+    <p class="newsletter-subtitle">Curated home decor inspiration, styling tips, and ideas — straight to your inbox.</p>
+
+    <form action="https://app.kit.com/forms/9948949/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="9948949" data-uid="506f9d5330" data-format="inline" data-version="5">
+      <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
+      <div data-element="fields" data-stacked="false" class="seva-fields formkit-fields">
+        <div class="formkit-field">
+          <input class="formkit-input" name="email_address" aria-label="Email Address" placeholder="Email address" required type="email">
+        </div>
+        <button data-element="submit" class="formkit-submit formkit-submit">
+          <div class="formkit-spinner"><div></div><div></div><div></div></div>
+          <span>Subscribe</span>
+        </button>
+      </div>
+    </form>
+
+    <p class="newsletter-note">We won't send you spam. Unsubscribe at any time.</p>
+  </div>
+</div>

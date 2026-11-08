@@ -1,0 +1,67 @@
+{{ $menu := .Site.Menus.main }}
+{{ $catItems := slice }}
+{{ range $menu }}
+  {{ if strings.HasPrefix .URL "/categories/" }}
+    {{ $catItems = $catItems | append . }}
+  {{ end }}
+{{ end }}
+
+{{ $total := len $catItems }}
+
+{{ if gt $total 0 }}
+
+  {{/* 1ST CATEGORY — hamesha banner */}}
+  {{ partial "category-banner.html" . }}
+
+  {{ partial "affiliate-gallery.html" . }}
+
+  {{ if eq $total 2 }}
+    {{/* ---------- SIRF 2 TOTAL CATEGORIES : 2ND BHI FULL BANNER ---------- */}}
+    {{ $second := index $catItems 1 }}
+    {{ $slug := path.Base $second.URL }}
+    {{ $termPage := $.Site.GetPage $second.URL }}
+    {{ $image := "" }}
+    {{ $intro := "" }}
+    {{ with $termPage }}
+      {{ $image = .Params.image }}
+      {{ $intro = .Description }}
+    {{ end }}
+    {{ if not $image }}{{ $image = "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=1600&q=80" }}{{ end }}
+    {{ $pages := where $.Site.RegularPages "Params.categories" "intersect" (slice $slug) }}
+    {{ $latest := $pages.ByDate.Reverse | first 3 }}
+
+    <section class="home-banner">
+      <div class="home-banner-media" style="background-image:url('{{ $image }}');">
+        <div class="home-banner-content">
+          <span class="home-banner-eyebrow">Featured Category</span>
+          <h2>{{ $second.Name }}</h2>
+          {{ with $intro }}<p>{{ . }}</p>{{ end }}
+          <a href="{{ $second.URL }}" class="home-banner-btn">Explore {{ $second.Name }}</a>
+        </div>
+      </div>
+      <div class="home-banner-articles">
+        {{ range $latest }}
+          <a href="{{ .Permalink }}" class="banner-article-card">
+            {{ with .Params.image }}
+              <div class="banner-article-img" style="background-image:url('{{ . }}')"></div>
+            {{ else }}
+              <div class="banner-article-img placeholder"></div>
+            {{ end }}
+            <div class="banner-article-body">
+              <h3>{{ .Title }}</h3>
+              <p>{{ .Summary | truncate 90 }}</p>
+            </div>
+          </a>
+        {{ end }}
+        {{ if not $latest }}
+          <p class="banner-articles-empty">New articles coming soon for {{ $second.Name }}.</p>
+        {{ end }}
+      </div>
+    </section>
+
+  {{ else if gt $total 2 }}
+    {{/* ---------- 3+ TOTAL CATEGORIES : BAAKI SAARI GALLERY MEIN ---------- */}}
+    {{ partial "category-gallery.html" (dict "ctx" .) }}
+  {{ end }}
+
+{{ end }}

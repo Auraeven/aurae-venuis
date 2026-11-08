@@ -1,0 +1,63 @@
+{{ define "main" }}
+
+{{ $currentURL := strings.TrimSuffix "/" .RelPermalink }}
+{{ $menu := .Site.Menus.main }}
+{{ $matchedMenuItem := "" }}
+{{ range $menu }}
+  {{ $itemURL := strings.TrimSuffix "/" .URL }}
+  {{ if eq $itemURL $currentURL }}
+    {{ $matchedMenuItem = . }}
+  {{ end }}
+{{ end }}
+
+<div class="category-archive">
+  <div class="category-archive-header">
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p>{{ . }}</p>{{ end }}
+
+    {{ if $matchedMenuItem }}
+      {{ if $matchedMenuItem.Children }}
+      <div class="category-filter-bar">
+        <button class="filter-btn active" data-filter="all">View All</button>
+        {{ range $matchedMenuItem.Children }}
+          {{ $subSlug := path.Base .URL }}
+          <button class="filter-btn" data-filter="{{ $subSlug }}">{{ .Name }}</button>
+          {{ range .Children }}
+            {{ $microSlug := path.Base .URL }}
+            <button class="filter-btn filter-btn-micro" data-filter="{{ $microSlug }}">{{ .Name }}</button>
+          {{ end }}
+        {{ end }}
+      </div>
+      {{ end }}
+    {{ end }}
+  </div>
+
+  <div class="category-archive-grid">
+    {{ range .Pages.ByDate.Reverse }}
+      {{ $cats := .Params.categories }}
+      {{ $catLabel := "" }}
+      {{ with $cats }}
+        {{ if gt (len .) 1 }}
+          {{ $catLabel = index . 1 }}
+        {{ else }}
+          {{ $catLabel = index . 0 }}
+        {{ end }}
+      {{ end }}
+      <a href="{{ .Permalink }}" class="archive-card" data-categories="{{ delimit $cats "," }}">
+        {{ with .Params.image }}
+        <div class="archive-card-image" style="background-image:url('{{ . }}')"></div>
+        {{ else }}
+        <div class="archive-card-image placeholder"></div>
+        {{ end }}
+        <div class="archive-card-body">
+          {{ if $catLabel }}<span class="archive-card-cat">{{ $catLabel | title }}</span>{{ end }}
+          <h3>{{ .Title }}</h3>
+          <p>{{ .Summary | truncate 90 }}</p>
+        </div>
+      </a>
+    {{ end }}
+  </div>
+  <p class="archive-empty-msg" style="display:none;">No articles found in this category.</p>
+</div>
+
+{{ end }}

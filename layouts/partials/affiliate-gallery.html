@@ -1,0 +1,48 @@
+<!-- ================= AFFILIATE PRODUCT GALLERY ================= -->
+<section class="affiliate-gallery">
+  <div class="gallery-container">
+
+    <!-- Header remains on the natural white upper layout -->
+    <div class="gallery-header">
+      <h2 class="gallery-title">
+        <span class="gallery-script-letter">F</span>eatured Finds
+      </h2>
+      <div class="gallery-header-right">
+        <p>Timeless design. Precise engineering.<br>Made to be worn, every day.</p>
+        <a href="{{ "/categories/new/" | relURL }}" class="gallery-explore-link">
+          Explore all <span class="gallery-arrow">↳</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- The Grey Grid Section start point -->
+    <div class="gallery-grid-wrapper">
+      <div class="gallery-grid">
+        {{ range $products := slice
+          (dict "name" "Aura Floor Light" "tag" "LUXE COLLECTION" "price" "$1285.00" "image" "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=800&q=80" "link" "#")
+          (dict "name" "Solis Table Lamp" "tag" "SIGNATURE ITEM" "price" "$2548.00" "image" "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80" "link" "#")
+          (dict "name" "Halo Accent Lamp" "tag" "LUXE COLLECTION" "price" "$1821.00" "image" "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80" "link" "#")
+          (dict "name" "Linen Glow" "tag" "AMBIENT COLLECTION" "price" "$3221.00" "image" "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80" "link" "#")
+        }}
+        <a href="{{ .link }}" class="gallery-card" target="_blank" rel="nofollow sponsored noopener">
+          <div class="gallery-card-image-wrap">
+            <img src="{{ .image }}" alt="{{ .name }}" class="gallery-card-image" loading="lazy">
+          </div>
+          <div class="gallery-card-content">
+            <div class="gallery-card-header-row">
+              <h3 class="gallery-card-title">{{ .name }}</h3>
+              <span class="gallery-card-tag">{{ .tag }}</span>
+            </div>
+            <div class="gallery-card-footer-row">
+              <span class="gallery-card-price">{{ .price }}</span>
+              <!-- Authentic bottom right arrow pointing bottom-right-to-right as `↳` or `→` -->
+              <span class="gallery-card-arrow">↳</span>
+            </div>
+          </div>
+        </a>
+        {{ end }}
+      </div>
+    </div>
+
+  </div>
+</section>

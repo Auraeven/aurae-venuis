@@ -1,0 +1,16 @@
+{{ define "main" }}
+
+<section class="hero-banner">
+  <div class="hero-content">
+    <h1>{{ .Site.Title }}</h1>
+    <p>Curated home decor inspiration for every space.</p>
+  </div>
+</section>
+
+{{ partial "affiliate-gallery.html" . }}
+{{ partial "category-banner.html" . }}
+{{ partial "category-gallery.html" . }}
+{{ partial "category-strip.html" (dict "root" . "idx" 3) }}
+{{ partial "category-strip.html" (dict "root" . "idx" 4) }}
+
+{{ end }}

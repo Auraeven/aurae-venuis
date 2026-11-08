@@ -1,0 +1,88 @@
+{{ define "main" }}
+<section class="category-page">
+  <div class="container">
+    
+    <!-- Category Title & Description -->
+    <div class="category-header-center">
+      <h1 class="cat-page-title">{{ .Title }}</h1>
+      {{ with .Params.description }}
+        <p class="cat-page-desc">{{ . }}</p>
+      {{ end }}
+
+      <!-- Dynamic Sub-Categories Filter Buttons -->
+      <div class="subcat-filter-nav">
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        
+        <!-- Collecting Sub-categories under current main category -->
+        {{ $subcats := slice }}
+        {{ range .Pages }}
+          {{ with .Params.subcategories }}
+            {{ range . }}
+              {{ $subcats = $subcats | append . }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+
+        {{ range ($subcats | uniq) }}
+          <button class="filter-btn" data-filter="{{ . | urlize }}">{{ . | upper }}</button>
+        {{ end }}
+      </div>
+    </div>
+
+    <!-- All Articles Grid (Sorted Newest First Automatically) -->
+    <div class="all-articles-grid" id="articles-container">
+      {{ range .Pages.ByDate.Reverse }}
+        {{ $sub := "" }}
+        {{ with .Params.subcategories }}{{ $sub = index . 0 | urlize }}{{ end }}
+        
+        <article class="cat-article-item" data-subcat="{{ $sub }}">
+          <a href="{{ .RelPermalink }}" class="cat-article-link">
+            <div class="cat-article-img-wrap">
+              <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+            </div>
+            <div class="cat-article-info">
+              <span class="cat-article-tag">
+                {{ with .Params.subcategories }}{{ index . 0 }}{{ end }}
+              </span>
+              <h3 class="cat-article-heading">{{ .Title }}</h3>
+              {{ with .Params.author }}
+                <span class="cat-article-author">By {{ . }}</span>
+              {{ end }}
+            </div>
+          </a>
+        </article>
+      {{ end }}
+    </div>
+
+  </div>
+</section>
+
+<!-- Filter Without Page Reload Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  const articles = document.querySelectorAll(".cat-article-item");
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener("click", function() {
+      // Toggle Active Button
+      filterBtns.forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+
+      const filter = this.getAttribute("data-filter");
+
+      articles.forEach(article => {
+        const itemSubcat = article.getAttribute("data-subcat");
+        if (filter === "all" || itemSubcat === filter) {
+          article.style.display = "block";
+          article.style.opacity = "1";
+        } else {
+          article.style.display = "none";
+          article.style.opacity = "0";
+        }
+      });
+    });
+  });
+});
+</script>
+{{ end }}
